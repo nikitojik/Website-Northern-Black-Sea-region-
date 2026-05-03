@@ -18,12 +18,18 @@
     </section>
 
     <section class="features container">
-      <article v-for="(item, index) in features" :key="item.title" class="feature" v-reveal="index * 90">
-        <img :src="item.icon" alt="" class="feature__icon">
-        <h2>{{ item.title }}</h2>
-        <p>{{ item.text }}</p>
-      </article>
-    </section>
+  <router-link
+    v-for="(item, index) in features"
+    :key="item.title"
+    :to="item.to"
+    class="feature"
+    v-reveal="index * 90"
+  >
+    <img :src="item.icon" alt="" class="feature__icon">
+    <h2>{{ item.title }}</h2>
+    <p>{{ item.text }}</p>
+  </router-link>
+</section>
 
     <section class="landmarks" v-reveal>
       <div class="container section-head">
@@ -72,22 +78,26 @@ const features = [
   {
     icon: iconMap,
     title: 'Интерактивная карта',
-    text: 'Исследуйте расположение античных городов на карте Северного Причерноморья.'
+    text: 'Исследуйте расположение античных городов на карте Северного Причерноморья.',
+    to: { name: 'wip', query: { title: 'Карта' } }
   },
   {
     icon: iconCity,
     title: 'Античные города',
-    text: 'Подробная информация о крупнейших греческих колониях региона.'
+    text: 'Подробная информация о крупнейших греческих колониях региона.',
+    to: { name: 'cities' }
   },
   {
     icon: iconCompass,
     title: 'История региона',
-    text: '250 лет изучения античных памятников Причерноморья.'
+    text: '250 лет изучения античных памятников Причерноморья.',
+    to: { name: 'history' }
   },
   {
     icon: iconHelmet,
     title: 'Экспедиции Эрмитажа',
-    text: 'Современные археологические исследования ведущего музея России.'
+    text: 'Современные археологические исследования ведущего музея России.',
+    to: { name: 'expeditions' }
   }
 ]
 </script>

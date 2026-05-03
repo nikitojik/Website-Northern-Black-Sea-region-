@@ -1197,3 +1197,8 @@ h3 {
   font-size: 10px;
   color: var(--muted);
 }
+
+.feature {
+  display: block;
+  color: inherit;
+}
