@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "slug": "pantikapey",
+    "title": "Пантикапей",
+    "greek": "Παντικάπαιον",
+    "image": "pantikapei.jpg",
+    "content": "pantikapeyContent",
+    "isPlaceholder": false
+  },
+  {
+    "id": 2,
+    "slug": "olbia",
+    "title": "Ольвия",
+    "greek": "Ὀλβία",
+    "image": "olbia.jpg",
+    "content": "olbiaContent",
+    "isPlaceholder": false
+  },
+  {
+    "id": 3,
+    "slug": "chersonesus",
+    "title": "Херсонес",
+    "greek": "Χερσόνησος",
+    "image": "chersonesus.jpg",
+    "content": "placeholderCityContent",
+    "isPlaceholder": true
+  },
+  {
+    "id": 4,
+    "slug": "phanagoria",
+    "title": "Фанагория",
+    "greek": "Φαναγόρεια",
+    "image": "phanagoria.jpg",
+    "content": "phanagoriaContent",
+    "isPlaceholder": false
+  }
+]

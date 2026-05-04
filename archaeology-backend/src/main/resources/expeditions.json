@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Экспедиция 1",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткое описание экспедиции 1",
+    "full": "Полное описание экспедиции 1..."
+  },
+  {
+    "id": 2,
+    "title": "Экспедиция 2",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткое описание экспедиции 2",
+    "full": "Полное описание экспедиции 2..."
+  },
+  {
+    "id": 3,
+    "title": "Экспедиция 3",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткое описание экспедиции 3",
+    "full": "Полное описание экспедиции 3..."
+  },
+  {
+    "id": 4,
+    "title": "Экспедиция 4",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткое описание экспедиции 4",
+    "full": "Полное описание экспедиции 4..."
+  }
+]
