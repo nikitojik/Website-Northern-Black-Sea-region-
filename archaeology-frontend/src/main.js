@@ -1,10 +1,12 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import HomeView from './views/HomeView.vue'
 import CitiesView from './views/CitiesView.vue'
 import CityDetailView from './views/CityDetailView.vue'
 import ContentDetailView from './views/ContentDetailView.vue'
+import MapView from './views/MapView.vue'
 import WipView from './views/WipView.vue'
 import HistoryView from './views/HistoryView.vue'
 import ExpeditionsView from './views/ExpeditionsView.vue'
@@ -14,6 +16,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
+    { path: '/map', name: 'map', component: MapView },
     { path: '/cities', name: 'cities', component: CitiesView },
     { path: '/cities/:id', name: 'city-detail', component: CityDetailView },
     { path: '/history', name: 'history', component: HistoryView },
@@ -28,6 +31,7 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.directive('reveal', {
   mounted(el, binding) {
@@ -50,4 +54,5 @@ app.directive('reveal', {
   }
 })
 
+app.use(pinia)
 app.use(router).mount('#app')

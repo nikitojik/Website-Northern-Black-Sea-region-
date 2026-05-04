@@ -18,7 +18,10 @@
       <div class="detail-page__content">
         <div class="detail-page__meta">{{ item.period }}</div>
         <h2>{{ item.title }}</h2>
-        <p>{{ item.full }}</p>
+
+        <div class="rich-text" v-if="item.full">
+          <p>{{ item.full }}</p>
+        </div>
 
         <router-link :to="backLink" class="btn btn--primary detail-page__button">
           ← Назад к списку
@@ -45,8 +48,8 @@ const item = computed(() => {
   const id = Number(route.params.id)
 
   return collection.value.find((entry) => entry.id === id) || {
-    title: 'Placeholder',
-    period: 'Placeholder',
+    title: 'Раздел в разработке',
+    period: '',
     image: placeholder,
     short: 'КРАТКОЕ ОПИСАНИЕ',
     full: 'ПОЛНОЕ ОПИСАНИЕ'

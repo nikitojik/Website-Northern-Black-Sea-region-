@@ -6,8 +6,8 @@
 
       <div class="container page-hero__inner">
         <div>
-          <h1>История</h1>
-          <p>КРАТКОЕ ОПИСАНИЕ</p>
+          <h1>История археологии</h1>
+          <p>250 лет изучения античных памятников Северного Причерноморья: от первых находок до современных исследований</p>
         </div>
       </div>
     </section>
@@ -15,8 +15,8 @@
     <section class="content-page container">
       <div class="section-head content-page__head" v-reveal>
         <div>
-          <h2>Placeholder</h2>
-          <p>КРАТКОЕ ОПИСАНИЕ</p>
+          <h2>Этапы исследования</h2>
+          <p>От зарождения античной археологии в России до современных экспедиций Эрмитажа</p>
         </div>
       </div>
 

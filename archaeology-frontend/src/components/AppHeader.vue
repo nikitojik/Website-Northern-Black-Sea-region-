@@ -9,10 +9,10 @@
 
       <nav class="header__nav">
         <router-link to="/">Главная</router-link>
-          <router-link :to="{ name: 'wip', query: { title: 'Карта' } }">Карта</router-link>
-          <router-link to="/cities">Города</router-link>
-          <router-link to="/history">История</router-link>
-          <router-link to="/expeditions">Экспедиции</router-link>
+        <router-link :to="{ name: 'map' }">Карта</router-link>
+        <router-link to="/cities">Города</router-link>
+        <router-link to="/history">История</router-link>
+        <router-link to="/expeditions">Экспедиции</router-link>
       </nav>
     </div>
   </header>

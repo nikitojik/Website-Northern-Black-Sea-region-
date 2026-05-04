@@ -6,8 +6,8 @@
 
       <div class="container page-hero__inner">
         <div>
-          <h1>Экспедиции</h1>
-          <p>КРАТКОЕ ОПИСАНИЕ</p>
+          <h1>Экспедиции Эрмитажа</h1>
+          <p>Археологические экспедиции Государственного Эрмитажа в Северном Причерноморье и Крыму</p>
         </div>
       </div>
     </section>
@@ -15,8 +15,8 @@
     <section class="content-page container">
       <div class="section-head content-page__head" v-reveal>
         <div>
-          <h2>Placeholder</h2>
-          <p>КРАТКОЕ ОПИСАНИЕ</p>
+          <h2>Действующие экспедиции</h2>
+          <p>Исследования античных памятников, проводимые музеем в наши дни</p>
         </div>
       </div>
 
