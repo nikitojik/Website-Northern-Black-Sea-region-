@@ -5,34 +5,369 @@
     "title": "Пантикапей",
     "greek": "Παντικάπαιον",
     "image": "pantikapei.jpg",
-    "content": "pantikapeyContent",
-    "isPlaceholder": false
+    "lat": 45.3517,
+    "lng": 36.4714,
+    "isMajor": true,
+    "isHermitage": false,
+    "isPlaceholder": false,
+    "content": {
+      "short": "Пантикапей — столица Боспорского царства, основанная греками из Милета на западном берегу Керченского пролива.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "parts": [
+            {
+              "text": "Пантикапей был основан в конце VII — начале VI в. до н. э. и стал крупнейшим экономическим и культурным центром региона."
+            }
+          ]
+        }
+      ],
+      "notes": {}
+    }
   },
   {
     "id": 2,
     "slug": "olbia",
     "title": "Ольвия",
     "greek": "Ὀλβία",
-    "image": "olbia.jpg",
-    "content": "olbiaContent",
-    "isPlaceholder": false
+    "image": "olbia.png",
+    "lat": 46.6103,
+    "lng": 31.5258,
+    "isMajor": true,
+    "isHermitage": true,
+    "isPlaceholder": false,
+    "content": {
+      "short": "Ольвия — один из крупнейших античных полисов Северного Причерноморья, расположенный на правом берегу Бугского лимана.",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "parts": [
+            {
+              "text": "Ольвия",
+              "note": "olbia-name"
+            },
+            {
+              "text": " — один из крупнейших античных полисов Северного Причерноморья, располагавшийся на правом берегу Бугского лимана, близ современного с. Парутино."
+            }
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Общие данные"
+        },
+        {
+          "type": "paragraph",
+          "parts": [
+            {
+              "text": "Городище Ольвии",
+              "note": "olbia-site"
+            },
+            {
+              "text": " расположено на правом берегу Бугского лимана и представляет собой всхолмление неправильной формы."
+            }
+          ]
+        }
+      ],
+      "notes": {
+        "olbia-name": {
+          "title": "Источник",
+          "text": "Ольвия // Большая российская энциклопедия. URL: https://old.bigenc.ru/archeology/text/2685862",
+          "sourceHref": "https://old.bigenc.ru/archeology/text/2685862"
+        },
+        "olbia-site": {
+          "title": "Источник",
+          "text": "Крыжицкий С. Д., Русяева А. С., Крапивина В. В. Ольвия. Античное государство в Северном Причерноморье. Киев, 1999."
+        }
+      }
+    }
   },
   {
     "id": 3,
     "slug": "chersonesus",
     "title": "Херсонес",
     "greek": "Χερσόνησος",
-    "image": "chersonesus.jpg",
-    "content": "placeholderCityContent",
-    "isPlaceholder": true
+    "image": "chersonesus.png",
+    "lat": 44.6133,
+    "lng": 33.4894,
+    "isMajor": true,
+    "isHermitage": false,
+    "isPlaceholder": false,
+    "content": {
+      "short": "Херсонес Таврический — античный город-государство в юго-западной части Крыма.",
+      "blocks": [],
+      "notes": {}
+    }
   },
   {
     "id": 4,
     "slug": "phanagoria",
     "title": "Фанагория",
-    "greek": "Φαναγόρεια",
-    "image": "phanagoria.jpg",
-    "content": "phanagoriaContent",
-    "isPlaceholder": false
+    "greek": "Φαναγόрεια",
+    "image": "phanagoria.png",
+    "lat": 45.2439,
+    "lng": 36.9608,
+    "isMajor": true,
+    "isHermitage": false,
+    "isPlaceholder": false,
+    "content": {
+      "short": "Фанагория — крупнейшая древнегреческая колония на Таманском полуострове.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 5,
+    "slug": "borisfen",
+    "title": "Борисфен",
+    "greek": "Βορυσθένης",
+    "image": "borisfen.jpg",
+    "lat": 46.6,
+    "lng": 31.44,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Древнейшее греческое поселение в регионе на острове Березань.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 6,
+    "slug": "germonassa",
+    "title": "Гермонасса",
+    "greek": "Ἡрμόνασσα",
+    "image": "hermonassa.jpg",
+    "lat": 45.2833,
+    "lng": 36.9833,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на азиатском берегу Боспора Киммерийского.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 7,
+    "slug": "gorgippia",
+    "title": "Горгиппия",
+    "greek": "Γοργιππία",
+    "image": "gorgippia.jpg",
+    "lat": 44.8997,
+    "lng": 37.3233,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на побережье Анапской бухты.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 8,
+    "slug": "kalos-limen",
+    "title": "Калос Лимен",
+    "greek": "Καλός Λιμήν",
+    "image": "kalos-limen.jpg",
+    "lat": 45.3833,
+    "lng": 32.75,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Древнегреческий город на западе Крыма, 'Прекрасная Гавань'.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 9,
+    "slug": "kerkinitida",
+    "title": "Керкинитида",
+    "greek": "Κερκινῖτις",
+    "image": "kerkinitida.jpg",
+    "lat": 45.3333,
+    "lng": 33.6167,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на месте современной Евпатории.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 10,
+    "slug": "kimmerik",
+    "title": "Киммерик",
+    "greek": "Κιммеρικόν",
+    "image": "kimmerik.jpg",
+    "lat": 45.05,
+    "lng": 35.8167,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на южном склоне горы Опук.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 11,
+    "slug": "kitey",
+    "title": "Китей",
+    "greek": "Κίταιον",
+    "image": "kitey.jpg",
+    "lat": 45.0167,
+    "lng": 35.8833,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на юго-восточном берегу Керченского полуострова.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 12,
+    "slug": "mirmekiy",
+    "title": "Мирмекий",
+    "greek": "Μυρμήκιον",
+    "image": "mirmekiy.jpg",
+    "lat": 45.3167,
+    "lng": 36.4667,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на берегу Керченского пролива.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 13,
+    "slug": "neapol-skit",
+    "title": "Неаполь Скифский",
+    "greek": "Νεάπολις Σκυθική",
+    "image": "neapol.jpg",
+    "lat": 44.9333,
+    "lng": 34.1667,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Столица позднескифского государства в Крыму.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 14,
+    "slug": "nikoniy",
+    "title": "Никоний",
+    "greek": "Νικώνιον",
+    "image": "nikoniy.jpg",
+    "lat": 46.2167,
+    "lng": 30.6333,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на левом берегу Днестровского лимана.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 15,
+    "slug": "nimfey",
+    "title": "Нимфей",
+    "greek": "Νύμφαιον",
+    "image": "nimfey.jpg",
+    "lat": 45.2667,
+    "lng": 36.5333,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на берегу Керченского пролива к югу от Пантикапея.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 16,
+    "slug": "tanais",
+    "title": "Танаис",
+    "greek": "Τάναϊς",
+    "image": "tanais.jpg",
+    "lat": 47.2167,
+    "lng": 39.35,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город в устье реки Дон.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 17,
+    "slug": "tira",
+    "title": "Тира",
+    "greek": "Τύρας",
+    "image": "tira.jpg",
+    "lat": 46.2,
+    "lng": 30.3667,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на правом берегу Днестровского лимана.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 18,
+    "slug": "tiritaka",
+    "title": "Тиритака",
+    "greek": "Τυριτάκη",
+    "image": "tiritaka.jpg",
+    "lat": 45.3,
+    "lng": 36.5,
+    "isMajor": false,
+    "isHermitage": false,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на берегу Керченского пролива.",
+      "blocks": [],
+      "notes": {}
+    }
+  },
+  {
+    "id": 19,
+    "slug": "feodosiya",
+    "title": "Феодосия",
+    "greek": "Θεοδοσία",
+    "image": "feodosiya.jpg",
+    "lat": 45.0333,
+    "lng": 35.3833,
+    "isMajor": false,
+    "isHermitage": true,
+    "isPlaceholder": true,
+    "content": {
+      "short": "Античный город на юго-восточном побережье Крыма.",
+      "blocks": [],
+      "notes": {}
+    }
   }
 ]

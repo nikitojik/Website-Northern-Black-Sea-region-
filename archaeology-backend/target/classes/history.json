@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "История 1",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткая история 1",
+    "full": "Полный текст истории 1..."
+  },
+  {
+    "id": 2,
+    "title": "История 2",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткая история 2",
+    "full": "Полный текст истории 2..."
+  },
+  {
+    "id": 3,
+    "title": "История 3",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткая история 3",
+    "full": "Полный текст истории 3..."
+  },
+  {
+    "id": 4,
+    "title": "История 4",
+    "period": "Период",
+    "image": "placeholder.png",
+    "isPlaceholder": true,
+    "short": "Краткая история 4",
+    "full": "Полный текст истории 4..."
+  }
+]

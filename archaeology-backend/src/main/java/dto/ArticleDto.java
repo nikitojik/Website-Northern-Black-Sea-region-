@@ -8,9 +8,9 @@ import lombok.Data;
 public class ArticleDto {
     private Long id;
     private String title;
-    private String period;       // Фронт ждет строку "Период" (например, "1934-2023")
+    private String period;
     private String image;
-    private String shortText;    // В JSON фронта это поле называется "short"
-    private String fullText;     // В JSON фронта это поле называется "full"
+    private String shortText; // Краткое описание для списка
+    private String fullText;  // Полный текст для страницы детализации
     private boolean isPlaceholder;
 }

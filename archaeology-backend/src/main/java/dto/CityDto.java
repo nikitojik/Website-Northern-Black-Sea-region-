@@ -8,12 +8,14 @@ import java.util.Map;
 @Builder
 public class CityDto {
     private Long id;
-    private String slug;         // например, "pantikapey"
-    private String title;        // "Пантикапей"
-    private String greek;        // "Παντικάπαιον"
-    private String image;        // Ссылка на картинку или имя файла
+    private String slug;
+    private String title;
+    private String greek;
+    private String image;
+    private Double lat;          // Координата широты для карты
+    private Double lng;          // Координата долготы для карты
+    private boolean isMajor;     // Крупнейшее поселение
+    private boolean isHermitage; // Экспедиция Эрмитажа
     private boolean isPlaceholder;
-
-    // Используем Object или Map для сложного текста с блоками и сносками
-    private Map<String, Object> content;
+    private Map<String, Object> content; // Весь сложный текст (блоки, сноски)
 }
