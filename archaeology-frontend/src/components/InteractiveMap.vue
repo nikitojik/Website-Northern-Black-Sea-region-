@@ -1,432 +1,352 @@
 <template>
-  <div class="map-wrapper" ref="mapWrapper">
-    <div class="map-container" ref="mapContainer"></div>
+  <div class="sea-map-redesign" ref="mapWrapper">
+    <div ref="mapContainer" class="sea-map-redesign__canvas"></div>
 
-    <div class="map-legend">
-      <h3 class="map-legend__title">Легенда</h3>
-      <div class="map-legend__item">
-        <span class="map-legend__marker map-legend__marker--major"></span>
-        <span>Крупнейшие поселения</span>
-      </div>
-      <div class="map-legend__item">
-        <span class="map-legend__marker map-legend__marker--hermitage"></span>
-        <span>Экспедиции Эрмитажа</span>
-      </div>
-      <div class="map-legend__item">
-        <span class="map-legend__marker map-legend__marker--regular"></span>
-        <span>Античные города</span>
-      </div>
-    </div>
-
-    <Transition name="map-popup">
-      <div
-        v-if="hoveredCity"
-        class="map-popup"
+    <Transition name="sea-map-redesign-popup">
+      <article
+        v-if="selectedCity"
+        class="sea-map-redesign__popup"
         :style="popupStyle"
-        @mouseenter="keepPopup"
-        @mouseleave="scheduleHidePopup"
       >
-        <img
-          :src="hoveredCity.image"
-          :alt="hoveredCity.title"
-          class="map-popup__image"
-        />
-        <div class="map-popup__content">
-          <div class="map-popup__head">
-            <h3>{{ hoveredCity.title }}</h3>
-            <span class="map-popup__greek">{{ hoveredCity.greek }}</span>
-          </div>
-          <p>{{ hoveredCity.content?.short || 'Краткое описание города' }}</p>
-          <router-link
-            :to="{ name: 'city-detail', params: { id: hoveredCity.id } }"
-            class="btn btn--primary map-popup__button"
-          >
-            Подробнее →
-          </router-link>
-        </div>
-      </div>
+        <h3>{{ selectedCity.title }}</h3>
+        <p>{{ getShortText(selectedCity) }}</p>
+
+        <router-link
+          :to="{ name: 'city-detail', params: { id: selectedCity.id } }"
+          class="sea-map-redesign__popup-link"
+        >
+          Подробнее →
+        </router-link>
+      </article>
     </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { useCitiesStore } from '../stores/cities'
+import { cities } from '../data/cities'
 
-const store = useCitiesStore()
+const route = useRoute()
+
 const mapContainer = ref(null)
 const mapWrapper = ref(null)
+const selectedCity = ref(null)
+const popupLeft = ref(0)
+const popupTop = ref(0)
+
 let map = null
 let markers = []
-let hidePopupTimeout = null
-
-const hoveredCity = ref(null)
-const popupX = ref(0)
-const popupY = ref(0)
+let selectedLatLng = null
 
 const popupStyle = computed(() => ({
-  left: `${popupX.value}px`,
-  top: `${popupY.value}px`
+  left: `${popupLeft.value}px`,
+  top: `${popupTop.value}px`
 }))
 
-function createIcon(type) {
-  const colors = {
-    major: { bg: '#c0392b', border: '#922b21', size: 18 },
-    hermitage: { bg: '#2980b9', border: '#1f618d', size: 14 },
-    regular: { bg: '#27ae60', border: '#1e8449', size: 12 }
-  }
+function getShortText(city) {
+  return (
+    city.content?.shortDescription ||
+    city.content?.short ||
+    city.content?.description ||
+    'Краткое описание города'
+  )
+}
 
-  const c = colors[type] || colors.regular
-  const half = c.size / 2
-
+function createMarkerIcon(active = false) {
   return L.divIcon({
-    className: 'custom-marker',
-    html: `<div style="
-      width: ${c.size}px;
-      height: ${c.size}px;
-      background: ${c.bg};
-      border: 2px solid ${c.border};
-      border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    "></div>`,
-    iconSize: [c.size, c.size],
-    iconAnchor: [half, half],
-    popupAnchor: [0, -half]
+    className: 'sea-map-redesign-marker',
+    html: `<span class="sea-map-redesign-marker__dot${active ? ' sea-map-redesign-marker__dot--active' : ''}"></span>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9]
   })
 }
 
-function getMarkerType(city) {
-  if (city.isMajor) return 'major'
-  if (city.isHermitage) return 'hermitage'
-  return 'regular'
+function updateMarkers() {
+  markers.forEach(({ marker, city }) => {
+    marker.setIcon(createMarkerIcon(selectedCity.value?.id === city.id))
+  })
 }
 
-function showPopup(city, latlng) {
-  if (hidePopupTimeout) {
-    clearTimeout(hidePopupTimeout)
-    hidePopupTimeout = null
-  }
-
-  hoveredCity.value = city
+function placePopup(latlng) {
+  if (!map || !mapWrapper.value) return
 
   const point = map.latLngToContainerPoint(latlng)
-  const wrapperRect = mapWrapper.value.getBoundingClientRect()
-  const popupWidth = 320
-  const popupHeight = 280
+  const bounds = mapWrapper.value.getBoundingClientRect()
+  const popupWidth = 176
+  const popupHeight = 112
 
-  let x = point.x + 20
-  let y = point.y - 20
+  let left = point.x + 14
+  let top = point.y - popupHeight / 2
 
-  if (x + popupWidth > wrapperRect.width) {
-    x = point.x - popupWidth - 20
+  if (left + popupWidth > bounds.width - 16) {
+    left = point.x - popupWidth - 14
   }
-  if (y + popupHeight > wrapperRect.height) {
-    y = wrapperRect.height - popupHeight - 20
-  }
-  if (y < 20) y = 20
-  if (x < 20) x = 20
 
-  popupX.value = x
-  popupY.value = y
+  if (left < 16) {
+    left = 16
+  }
+
+  if (top < 16) {
+    top = 16
+  }
+
+  if (top + popupHeight > bounds.height - 16) {
+    top = bounds.height - popupHeight - 16
+  }
+
+  popupLeft.value = left
+  popupTop.value = top
 }
 
-function scheduleHidePopup() {
-  hidePopupTimeout = setTimeout(() => {
-    hoveredCity.value = null
-  }, 300)
+function openPopup(city, latlng) {
+  selectedCity.value = city
+  selectedLatLng = latlng
+  placePopup(latlng)
+  updateMarkers()
 }
 
-function keepPopup() {
-  if (hidePopupTimeout) {
-    clearTimeout(hidePopupTimeout)
-    hidePopupTimeout = null
+function closePopup() {
+  selectedCity.value = null
+  selectedLatLng = null
+  updateMarkers()
+}
+
+function handleMapMove() {
+  if (selectedLatLng) {
+    placePopup(selectedLatLng)
   }
 }
+
+function focusCityById(cityId) {
+  if (!map) return
+
+  const normalizedId = Number(cityId)
+  if (!normalizedId) return
+
+  const markerItem = markers.find(({ city }) => city.id === normalizedId)
+  if (!markerItem) return
+
+  const latlng = markerItem.marker.getLatLng()
+
+  map.setView(latlng, 8, {
+    animate: true
+  })
+
+  nextTick(() => {
+    openPopup(markerItem.city, latlng)
+  })
+}
+
+function focusCityFromRoute() {
+  focusCityById(route.query.city)
+}
+
+defineExpose({
+  focusCityById
+})
 
 onMounted(async () => {
   await nextTick()
 
   map = L.map(mapContainer.value, {
-    center: [45.5, 34.5],
+    center: [45.4, 35.3],
     zoom: 7,
     minZoom: 5,
-    maxZoom: 12,
-    zoomControl: true,
-    attributionControl: false
+    maxZoom: 10,
+    zoomControl: false,
+    attributionControl: false,
+    scrollWheelZoom: true
   })
 
-  const osmLayer = L.tileLayer(
-    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    {
-      maxZoom: 18
-    }
-  )
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    subdomains: 'abcd',
+    maxZoom: 18
+  }).addTo(map)
 
-  const voyagerLayer = L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    {
-      subdomains: 'abcd',
-      maxZoom: 19
-    }
-  )
-
-  osmLayer.addTo(map)
-
-  L.control.layers(
-    {
-      'Классическая': osmLayer,
-      'Современная': voyagerLayer
-    },
-    null,
-    { position: 'bottomleft', collapsed: true }
-  ).addTo(map)
-
-  store.cities.forEach((city) => {
+  cities.forEach((city) => {
     if (!city.lat || !city.lng) return
 
-    const type = getMarkerType(city)
-    const icon = createIcon(type)
+    const marker = L.marker([city.lat, city.lng], {
+      icon: createMarkerIcon(false)
+    }).addTo(map)
 
-    const marker = L.marker([city.lat, city.lng], { icon })
-      .addTo(map)
-
-    marker.on('mouseover', () => {
-      showPopup(city, marker.getLatLng())
+    marker.on('click', (event) => {
+      L.DomEvent.stopPropagation(event)
+      openPopup(city, marker.getLatLng())
     })
 
-    marker.on('mouseout', () => {
-      scheduleHidePopup()
-    })
-
-    marker.on('click', () => {
-      hoveredCity.value = null
-    })
-
-    markers.push(marker)
+    markers.push({ marker, city })
   })
 
-  const group = L.featureGroup(markers)
-  map.fitBounds(group.getBounds().pad(0.15))
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers.map(item => item.marker))
+    map.fitBounds(group.getBounds().pad(0.16))
+  }
+
+  map.on('click', closePopup)
+  map.on('zoom move resize', handleMapMove)
+
+  setTimeout(() => {
+    focusCityFromRoute()
+  }, 250)
 })
+
+watch(
+  () => route.query.city,
+  () => {
+    focusCityFromRoute()
+  }
+)
 
 onBeforeUnmount(() => {
   if (map) {
+    map.off('zoom move resize', handleMapMove)
     map.remove()
     map = null
   }
+
   markers = []
-  if (hidePopupTimeout) {
-    clearTimeout(hidePopupTimeout)
-  }
 })
 </script>
 
 <style>
-.custom-marker {
+.sea-map-redesign-marker {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
   background: transparent !important;
-  border: none !important;
+  border: 0 !important;
+}
+
+.sea-map-redesign-marker__dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: #2a9d8e;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(58, 46, 31, .24);
+  transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+
+.sea-map-redesign-marker__dot--active {
+  background: #1f7f73;
+  box-shadow: 0 0 0 3px rgba(42, 157, 142, .18), 0 3px 8px rgba(58, 46, 31, .26);
+}
+
+.sea-map-redesign-marker:hover .sea-map-redesign-marker__dot {
+  transform: scale(1.12);
 }
 </style>
 
 <style scoped>
-.map-wrapper {
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Lora:wght@400;500;600&display=swap');
+
+.sea-map-redesign,
+.sea-map-redesign *,
+.sea-map-redesign *::before,
+.sea-map-redesign *::after {
+  box-sizing: border-box;
+}
+
+.sea-map-redesign {
   position: relative;
   width: 100%;
-  height: calc(100vh - 54px);
+  height: 861px;
   overflow: hidden;
-  background: #e8e0d0;
+  background: #d7e7ef;
 }
 
-.map-container {
+.sea-map-redesign__canvas {
   width: 100%;
-  height: 100%;
+  height: 861px;
 }
 
-.map-container :deep(.leaflet-tile-pane) {
-  filter: sepia(0.05) contrast(1.03) brightness(0.99);
+.sea-map-redesign__canvas :deep(.leaflet-control-container) {
+  display: none;
 }
 
-.map-wrapper :deep(.leaflet-control-layers) {
-  border: 1px solid var(--line-soft) !important;
-  border-radius: 8px !important;
-  background: rgba(255, 252, 244, 0.92) !important;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
-  color: var(--text);
-  padding: 8px 12px !important;
-  line-height: 1.6;
+.sea-map-redesign__canvas :deep(.leaflet-tile-pane) {
+  filter: saturate(1.12) contrast(1) brightness(1.02);
 }
 
-.map-wrapper :deep(.leaflet-control-layers-list label) {
-  cursor: pointer;
-  margin-bottom: 2px;
-}
-
-.map-wrapper :deep(.leaflet-control-layers-selector) {
-  margin-right: 6px;
-  accent-color: #8b6914;
-}
-
-.map-legend {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 800;
-  padding: 16px 20px;
-  border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  background: rgba(255, 252, 244, 0.92);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 8px 24px var(--shadow);
-}
-
-.map-legend__title {
-  margin-bottom: 12px;
-  font-size: 14px;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-weight: 500;
-}
-
-.map-legend__item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: var(--text);
-}
-
-.map-legend__item:last-child {
-  margin-bottom: 0;
-}
-
-.map-legend__marker {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid;
-}
-
-.map-legend__marker--major {
-  background: #c0392b;
-  border-color: #922b21;
-}
-
-.map-legend__marker--hermitage {
-  background: #2980b9;
-  border-color: #1f618d;
-}
-
-.map-legend__marker--regular {
-  background: #27ae60;
-  border-color: #1e8449;
-}
-
-.map-popup {
+.sea-map-redesign__popup {
   position: absolute;
   z-index: 900;
-  width: 320px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--paper);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  pointer-events: auto;
+  width: 176px;
+  min-height: 112px;
+  padding: 11px 13px 12px;
+  background: rgba(255, 255, 255, .98);
+  border-radius: 7px;
+  box-shadow: 0 10px 22px rgba(58, 46, 31, .2);
 }
 
-.map-popup__image {
-  display: block;
-  width: 100%;
-  height: 130px;
-  object-fit: cover;
+.sea-map-redesign__popup::after {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, .98);
+  transform: translateY(-50%) rotate(45deg);
 }
 
-.map-popup__content {
-  padding: 14px 16px 16px;
-}
-
-.map-popup__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.map-popup__head h3 {
+.sea-map-redesign__popup h3 {
+  margin: 0 0 5px;
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 21px;
+  color: #3a2e1f;
 }
 
-.map-popup__greek {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.map-popup__content p {
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--text);
-  margin-bottom: 12px;
-
+.sea-map-redesign__popup p {
+  margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: Lora, Georgia, serif;
+  font-size: 13px;
+  line-height: 17px;
+  color: #6b5a3a;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.map-popup__button {
-  font-size: 11px;
-  min-height: 26px;
-  padding: 0 14px;
+.sea-map-redesign__popup-link {
+  display: inline-flex;
+  margin-top: 8px;
+  font-family: Lora, Georgia, serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2a9d8e;
 }
 
-.map-popup-enter-active,
-.map-popup-leave-active {
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+.sea-map-redesign-popup-enter-active,
+.sea-map-redesign-popup-leave-active {
+  transition: opacity .18s ease, transform .18s ease;
 }
 
-.map-popup-enter-from,
-.map-popup-leave-to {
+.sea-map-redesign-popup-enter-from,
+.sea-map-redesign-popup-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
+}
+
+@media (max-width: 920px) {
+  .sea-map-redesign,
+  .sea-map-redesign__canvas {
+    height: 720px;
+  }
 }
 
 @media (max-width: 640px) {
-  .map-wrapper {
-    height: calc(100vh - 48px);
-  }
-
-  .map-legend {
-    top: 10px;
-    right: 10px;
-    padding: 12px 14px;
-  }
-
-  .map-legend__title {
-    font-size: 12px;
-  }
-
-  .map-legend__item {
-    font-size: 11px;
-  }
-
-  .map-popup {
-    width: 260px;
-  }
-
-  .map-popup__image {
-    height: 100px;
+  .sea-map-redesign,
+  .sea-map-redesign__canvas {
+    height: 560px;
   }
 }
 </style>
