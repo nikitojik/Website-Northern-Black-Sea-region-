@@ -348,7 +348,6 @@ function focusCity(city) {
   min-height: 425px;
   padding: 14px 0 31px;
   background: #ffffff;
-  border-bottom: 2px solid #c9a55c;
 }
 
 .map-page-redesign__cities h2 {

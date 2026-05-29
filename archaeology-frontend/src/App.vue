@@ -6,7 +6,7 @@
         <component :is="Component" :key="route.path" />
       </Transition>
     </router-view>
-    <AppFooter v-if="!isMapPage" />
+    <AppFooter/>
   </div>
 </template>
 
