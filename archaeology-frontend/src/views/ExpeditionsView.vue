@@ -1,5 +1,19 @@
 <template>
   <main class="expeditions-page-redesign">
+    <section class="expeditions-page-redesign__hero">
+      <div class="expeditions-page-redesign__hero-inner">
+        <h1>
+          <span class="expeditions-page-redesign__hero-main">ЭКСПЕДИЦИИ ЭРМИТАЖА</span>
+          <span class="expeditions-page-redesign__hero-accent">Северного Причерноморья</span>
+        </h1>
+
+        <p>
+          Экспедиции и археологические исследования античных городов
+          Северного Причерноморья и Крыма.
+        </p>
+      </div>
+    </section>
+
     <section class="expeditions-page-redesign__content">
       <div class="expeditions-page-redesign__container">
         <div class="expeditions-page-redesign__grid">
@@ -102,6 +116,48 @@ const hiddenCount = computed(() => {
 .expeditions-page-redesign__container {
   width: min(1278px, calc(100% - 162px));
   margin: 0 auto;
+}
+
+.expeditions-page-redesign__hero {
+  min-height: 250px;
+  padding: 23px 0 34px;
+  background: #f5f1e8;
+  border-bottom: 2px solid #c9a55c;
+}
+
+.expeditions-page-redesign__hero-inner {
+  width: min(692px, calc(100% - 40px));
+  margin: 0 auto;
+  text-align: center;
+}
+
+.expeditions-page-redesign__hero h1 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.expeditions-page-redesign__hero h1 span {
+  display: block;
+}
+
+.expeditions-page-redesign__hero-main {
+  color: #3a2e1f;
+}
+
+.expeditions-page-redesign__hero-accent {
+  color: #2a9d8e;
+}
+
+.expeditions-page-redesign__hero p {
+  margin: 18px auto 0;
+  font-family: Lora, Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 26px;
+  color: #6b5a3a;
 }
 
 .expeditions-page-redesign__content {
@@ -297,6 +353,21 @@ const hiddenCount = computed(() => {
 }
 
 @media (max-width: 640px) {
+  .expeditions-page-redesign__hero {
+    min-height: auto;
+    padding: 36px 0 42px;
+  }
+
+  .expeditions-page-redesign__hero h1 {
+    font-size: 34px;
+    line-height: 40px;
+  }
+
+  .expeditions-page-redesign__hero p {
+    font-size: 17px;
+    line-height: 24px;
+  }
+
   .expeditions-page-redesign__content {
     min-height: auto;
     padding: 40px 0 48px;

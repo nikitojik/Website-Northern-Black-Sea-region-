@@ -75,6 +75,7 @@
   width: 242px;
   height: 112px;
   margin-top: 26px;
+  opacity: 0.5;
   object-fit: cover;
   object-position: center;
 }

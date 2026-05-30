@@ -208,7 +208,7 @@ function scrollLandmarks(direction) {
   height: 476px;
   margin-top: 14px;
   object-fit: cover;
-  object-position: center;
+  object-position: center 0%;
   border-radius: 12px;
 }
 

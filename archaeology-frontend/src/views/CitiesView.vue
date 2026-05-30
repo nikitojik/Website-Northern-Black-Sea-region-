@@ -1,5 +1,19 @@
 <template>
   <main class="cities-index">
+    <section class="cities-index__hero">
+      <div class="cities-index__hero-inner">
+        <h1>
+          <span class="cities-index__hero-main">АНТИЧНЫЕ ГОРОДА</span>
+          <span class="cities-index__hero-accent">Северного Причерноморья</span>
+        </h1>
+
+        <p>
+          Исследуйте античные греческие города Северного Причерноморья и Крыма:
+          историю, археологические памятники и современные места расположения.
+        </p>
+      </div>
+    </section>
+
     <section class="cities-index-list">
       <div class="cities-index-container">
         <p class="cities-index-list__count">
@@ -80,7 +94,7 @@ function openCity(city) {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lora:wght@400;600&family=Inter:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lora:wght@400;500;600&family=Inter:wght@400&display=swap');
 
 .cities-index,
 .cities-index *,
@@ -98,6 +112,48 @@ function openCity(city) {
 .cities-index-container {
   width: min(1272px, calc(100% - 160px));
   margin: 0 auto;
+}
+
+.cities-index__hero {
+  min-height: 250px;
+  padding: 23px 0 34px;
+  background: #f5f1e8;
+  border-bottom: 2px solid #c9a55c;
+}
+
+.cities-index__hero-inner {
+  width: min(692px, calc(100% - 40px));
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cities-index__hero h1 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.cities-index__hero h1 span {
+  display: block;
+}
+
+.cities-index__hero-main {
+  color: #3a2e1f;
+}
+
+.cities-index__hero-accent {
+  color: #2a9d8e;
+}
+
+.cities-index__hero p {
+  margin: 18px auto 0;
+  font-family: Lora, Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 26px;
+  color: #6b5a3a;
 }
 
 .cities-index-list {
@@ -188,7 +244,7 @@ function openCity(city) {
   justify-content: center;
   min-width: 95px;
   height: 25px;
-  padding: 0 2px;
+  padding: 0 8px;
   background: rgba(236, 236, 236, .75);
   border: 0;
   border-radius: 5px;
@@ -298,6 +354,21 @@ function openCity(city) {
 }
 
 @media (max-width: 760px) {
+  .cities-index__hero {
+    min-height: auto;
+    padding: 36px 0 42px;
+  }
+
+  .cities-index__hero h1 {
+    font-size: 34px;
+    line-height: 40px;
+  }
+
+  .cities-index__hero p {
+    font-size: 17px;
+    line-height: 24px;
+  }
+
   .cities-index-list {
     padding-top: 30px;
   }
