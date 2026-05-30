@@ -87,27 +87,63 @@
             class="map-page-redesign__city-card"
             @click="focusCity(city)"
           >
-            <div class="map-page-redesign__city-icon" aria-hidden="true">
+            <div
+              class="map-page-redesign__city-icon"
+              :class="`map-page-redesign__city-icon--${getCityKind(city)}`"
+              aria-hidden="true"
+            >
               <svg
-                class="map-page-redesign__city-pin"
+                v-if="getCityKind(city) === 'red'"
+                class="map-page-redesign__city-symbol"
                 viewBox="0 0 24 24"
                 focusable="false"
               >
-                <path
-                  d="M12 21s7-6.18 7-12a7 7 0 0 0-14 0c0 5.82 7 12 7 12Z"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"
-                />
-                <circle
-                  cx="12"
-                  cy="9"
-                  r="2.6"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                />
+                <path d="M4 19h16" />
+                <path d="M6 16h12" />
+                <path d="M8 16V9" />
+                <path d="M12 16V9" />
+                <path d="M16 16V9" />
+                <path d="M5 9h14" />
+                <path d="M12 4 5 9h14L12 4Z" />
+              </svg>
+
+              <svg
+                v-else-if="getCityKind(city) === 'blue'"
+                class="map-page-redesign__city-symbol"
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M9 4h6" />
+                <path d="M10 4v5l-5 8a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-8V4" />
+                <path d="M8 15h8" />
+              </svg>
+
+              <svg
+                v-else-if="getCityKind(city) === 'green'"
+                class="map-page-redesign__city-symbol"
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M4 19h16" />
+                <path d="M5 9h14" />
+                <path d="M7 9v10" />
+                <path d="M11 9v10" />
+                <path d="M15 9v10" />
+                <path d="M19 9v10" />
+                <path d="M12 4 4 9h16L12 4Z" />
+              </svg>
+
+              <svg
+                v-else
+                class="map-page-redesign__city-symbol"
+                viewBox="0 0 24 24"
+                focusable="false"
+              >
+                <path d="M4 19h16" />
+                <path d="M6 19v-7l6-5 6 5v7" />
+                <path d="M9 19v-5h6v5" />
+                <path d="M12 7V4" />
+                <path d="M10 4h4" />
               </svg>
             </div>
 
@@ -187,6 +223,22 @@ function getLocation(city) {
   return city.location || locations[city.slug] || 'Место в настоящее время'
 }
 
+function getCityKind(city) {
+  if (['pantikapey', 'olbia', 'chersonesus', 'phanagoria', 'tanais', 'gorgippia'].includes(city.slug)) {
+    return 'red'
+  }
+
+  if (['mirmekiy', 'nimfey', 'tiritaka', 'kimmerik'].includes(city.slug)) {
+    return 'blue'
+  }
+
+  if (['hermonassa', 'germonassa', 'borisfen'].includes(city.slug)) {
+    return 'green'
+  }
+
+  return 'gold'
+}
+
 function focusCity(city) {
   mapSectionRef.value?.scrollIntoView({
     behavior: 'smooth',
@@ -257,7 +309,6 @@ function focusCity(city) {
   margin: 18px auto 0;
   font-family: Lora, Georgia, serif;
   font-size: 20px;
-  font-weight: 400;
   line-height: 26px;
   color: #6b5a3a;
 }
@@ -287,7 +338,6 @@ function focusCity(city) {
   border-radius: 6px;
   font-family: Lora, Georgia, serif;
   font-size: 16px;
-  font-weight: 400;
   line-height: 20px;
   color: #6b5a3a;
 }
@@ -299,14 +349,18 @@ function focusCity(city) {
   white-space: nowrap;
 }
 
-.map-page-redesign__legend-icon {
+.map-page-redesign__legend-icon,
+.map-page-redesign__city-icon {
   display: inline-flex;
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+
+.map-page-redesign__legend-icon {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
 }
 
 .map-page-redesign__legend-icon svg {
@@ -316,7 +370,9 @@ function focusCity(city) {
 }
 
 .map-page-redesign__legend-icon svg path,
-.map-page-redesign__legend-icon svg circle {
+.map-page-redesign__legend-icon svg circle,
+.map-page-redesign__city-symbol path,
+.map-page-redesign__city-symbol circle {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -324,22 +380,26 @@ function focusCity(city) {
   stroke-linejoin: round;
 }
 
-.map-page-redesign__legend-icon--red {
+.map-page-redesign__legend-icon--red,
+.map-page-redesign__city-icon--red {
   background: rgba(190, 74, 72, .14);
   color: #be4a48;
 }
 
-.map-page-redesign__legend-icon--blue {
+.map-page-redesign__legend-icon--blue,
+.map-page-redesign__city-icon--blue {
   background: rgba(42, 157, 142, .16);
   color: #2a9d8e;
 }
 
-.map-page-redesign__legend-icon--gold {
+.map-page-redesign__legend-icon--gold,
+.map-page-redesign__city-icon--gold {
   background: rgba(201, 165, 92, .18);
   color: #c9a55c;
 }
 
-.map-page-redesign__legend-icon--green {
+.map-page-redesign__legend-icon--green,
+.map-page-redesign__city-icon--green {
   background: rgba(78, 145, 94, .16);
   color: #4e915e;
 }
@@ -386,17 +446,11 @@ function focusCity(city) {
 }
 
 .map-page-redesign__city-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 35px;
   height: 35px;
-  background: rgba(0, 96, 174, .15);
-  border-radius: 25px;
-  color: #0b86d1;
 }
 
-.map-page-redesign__city-pin {
+.map-page-redesign__city-symbol {
   display: block;
   width: 22px;
   height: 22px;

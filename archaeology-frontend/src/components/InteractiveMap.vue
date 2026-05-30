@@ -55,18 +55,90 @@ function getShortText(city) {
   )
 }
 
-function createMarkerIcon(active = false) {
+function getCityKind(city) {
+  if (['pantikapey', 'olbia', 'chersonesus', 'phanagoria', 'tanais', 'gorgippia'].includes(city.slug)) {
+    return 'red'
+  }
+
+  if (['mirmekiy', 'nimfey', 'tiritaka', 'kimmerik'].includes(city.slug)) {
+    return 'blue'
+  }
+
+  if (['hermonassa', 'germonassa', 'borisfen'].includes(city.slug)) {
+    return 'green'
+  }
+
+  return 'gold'
+}
+
+function getMarkerSvg(kind) {
+  if (kind === 'red') {
+    return `
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M4 19h16" />
+        <path d="M6 16h12" />
+        <path d="M8 16V9" />
+        <path d="M12 16V9" />
+        <path d="M16 16V9" />
+        <path d="M5 9h14" />
+        <path d="M12 4 5 9h14L12 4Z" />
+      </svg>
+    `
+  }
+
+  if (kind === 'blue') {
+    return `
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M9 4h6" />
+        <path d="M10 4v5l-5 8a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-8V4" />
+        <path d="M8 15h8" />
+      </svg>
+    `
+  }
+
+  if (kind === 'green') {
+    return `
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M4 19h16" />
+        <path d="M5 9h14" />
+        <path d="M7 9v10" />
+        <path d="M11 9v10" />
+        <path d="M15 9v10" />
+        <path d="M19 9v10" />
+        <path d="M12 4 4 9h16L12 4Z" />
+      </svg>
+    `
+  }
+
+  return `
+    <svg viewBox="0 0 24 24" focusable="false">
+      <path d="M4 19h16" />
+      <path d="M6 19v-7l6-5 6 5v7" />
+      <path d="M9 19v-5h6v5" />
+      <path d="M12 7V4" />
+      <path d="M10 4h4" />
+    </svg>
+  `
+}
+
+function createMarkerIcon(city, active = false) {
+  const kind = getCityKind(city)
+
   return L.divIcon({
     className: 'sea-map-redesign-marker',
-    html: `<span class="sea-map-redesign-marker__dot${active ? ' sea-map-redesign-marker__dot--active' : ''}"></span>`,
-    iconSize: [18, 18],
-    iconAnchor: [9, 9]
+    html: `
+      <span class="sea-map-redesign-marker__symbol sea-map-redesign-marker__symbol--${kind}${active ? ' sea-map-redesign-marker__symbol--active' : ''}">
+        ${getMarkerSvg(kind)}
+      </span>
+    `,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15]
   })
 }
 
 function updateMarkers() {
   markers.forEach(({ marker, city }) => {
-    marker.setIcon(createMarkerIcon(selectedCity.value?.id === city.id))
+    marker.setIcon(createMarkerIcon(city, selectedCity.value?.id === city.id))
   })
 }
 
@@ -74,31 +146,22 @@ function placePopup(latlng) {
   if (!map || !mapWrapper.value) return
 
   const point = map.latLngToContainerPoint(latlng)
-  const bounds = mapWrapper.value.getBoundingClientRect()
-  const popupWidth = 176
+
   const popupHeight = 112
+  const markerSize = 30
+  const markerHalf = markerSize / 2
+  const gap = 10
 
-  let left = point.x + 14
-  let top = point.y - popupHeight / 2
-
-  if (left + popupWidth > bounds.width - 16) {
-    left = point.x - popupWidth - 14
-  }
-
-  if (left < 16) {
-    left = 16
-  }
-
-  if (top < 16) {
-    top = 16
-  }
-
-  if (top + popupHeight > bounds.height - 16) {
-    top = bounds.height - popupHeight - 16
-  }
+  const left = point.x + markerSize + gap
+  const top = point.y - popupHeight / 2 + markerHalf
 
   popupLeft.value = left
   popupTop.value = top
+  popupArrowSide.value = 'left'
+
+  if (typeof popupArrowTop !== 'undefined') {
+    popupArrowTop.value = popupHeight / 2
+  }
 }
 
 function openPopup(city, latlng) {
@@ -130,14 +193,23 @@ function focusCityById(cityId) {
   if (!markerItem) return
 
   const latlng = markerItem.marker.getLatLng()
+  const targetZoom = map.getMaxZoom()
 
-  map.setView(latlng, 8, {
+  const openFocusedPopup = () => {
+    openPopup(markerItem.city, latlng)
+  }
+
+  map.once('moveend', openFocusedPopup)
+
+  map.setView(latlng, targetZoom, {
     animate: true
   })
 
-  nextTick(() => {
-    openPopup(markerItem.city, latlng)
-  })
+  setTimeout(() => {
+    if (selectedCity.value?.id !== markerItem.city.id) {
+      openFocusedPopup()
+    }
+  }, 450)
 }
 
 function focusCityFromRoute() {
@@ -170,13 +242,13 @@ onMounted(async () => {
     if (!city.lat || !city.lng) return
 
     const marker = L.marker([city.lat, city.lng], {
-      icon: createMarkerIcon(false)
+      icon: createMarkerIcon(city, false)
     }).addTo(map)
 
     marker.on('click', (event) => {
-      L.DomEvent.stopPropagation(event)
-      openPopup(city, marker.getLatLng())
-    })
+  L.DomEvent.stopPropagation(event)
+  focusCityById(city.id)
+})
 
     markers.push({ marker, city })
   })
@@ -214,30 +286,69 @@ onBeforeUnmount(() => {
 
 <style>
 .sea-map-redesign-marker {
-  width: 18px !important;
-  height: 18px !important;
+  width: 30px !important;
+  height: 30px !important;
   margin: 0 !important;
   background: transparent !important;
   border: 0 !important;
 }
 
-.sea-map-redesign-marker__dot {
-  display: block;
-  width: 18px;
-  height: 18px;
-  background: #2a9d8e;
-  border: 3px solid #ffffff;
+.sea-map-redesign-marker__symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(58, 46, 31, .24);
+  box-shadow: 0 2px 7px rgba(58, 46, 31, .22);
   transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease;
 }
 
-.sea-map-redesign-marker__dot--active {
-  background: #1f7f73;
-  box-shadow: 0 0 0 3px rgba(42, 157, 142, .18), 0 3px 8px rgba(58, 46, 31, .26);
+.sea-map-redesign-marker__symbol svg {
+  display: block;
+  width: 19px;
+  height: 19px;
 }
 
-.sea-map-redesign-marker:hover .sea-map-redesign-marker__dot {
+.sea-map-redesign-marker__symbol svg path,
+.sea-map-redesign-marker__symbol svg circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sea-map-redesign-marker__symbol--red {
+  background: rgba(255, 255, 255, .94);
+  color: #be4a48;
+  border: 3px solid rgba(190, 74, 72, .7);
+}
+
+.sea-map-redesign-marker__symbol--blue {
+  background: rgba(255, 255, 255, .94);
+  color: #2a9d8e;
+  border: 3px solid rgba(42, 157, 142, .7);
+}
+
+.sea-map-redesign-marker__symbol--gold {
+  background: rgba(255, 255, 255, .94);
+  color: #c9a55c;
+  border: 3px solid rgba(201, 165, 92, .76);
+}
+
+.sea-map-redesign-marker__symbol--green {
+  background: rgba(255, 255, 255, .94);
+  color: #4e915e;
+  border: 3px solid rgba(78, 145, 94, .72);
+}
+
+.sea-map-redesign-marker__symbol--active {
+  transform: scale(1.14);
+  box-shadow: 0 0 0 4px rgba(42, 157, 142, .18), 0 4px 10px rgba(58, 46, 31, .26);
+}
+
+.sea-map-redesign-marker:hover .sea-map-redesign-marker__symbol {
   transform: scale(1.12);
 }
 </style>

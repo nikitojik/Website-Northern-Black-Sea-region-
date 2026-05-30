@@ -46,17 +46,36 @@
         <router-link to="/cities">Все города →</router-link>
       </div>
 
-      <div class="home-container home-landmarks__grid">
-        <router-link
-          v-for="(city, index) in featuredCities"
-          :key="city.id"
-          :to="{ name: 'city-detail', params: { id: city.id } }"
-          class="home-landmark"
-          v-reveal="index * 90"
+      <div class="home-container home-landmarks__carousel-wrap">
+        <button
+          class="home-landmarks__control home-landmarks__control--prev"
+          type="button"
+          aria-label="Предыдущие города"
+          @click="scrollLandmarks(-1)"
         >
-          <img :src="city.image" :alt="city.title" class="home-landmark__image">
-          <h3>{{ city.title }}</h3>
-        </router-link>
+          <span class="home-landmarks__control-arrow home-landmarks__control-arrow--prev" aria-hidden="true"></span>
+        </button>
+
+        <div ref="landmarksCarouselRef" class="home-landmarks__carousel">
+          <router-link
+            v-for="city in landmarkCities"
+            :key="city.id"
+            :to="{ name: 'city-detail', params: { id: city.id } }"
+            class="home-landmark"
+          >
+            <img :src="city.image" :alt="city.title" class="home-landmark__image">
+            <h3>{{ city.title }}</h3>
+          </router-link>
+        </div>
+
+        <button
+          class="home-landmarks__control home-landmarks__control--next"
+          type="button"
+          aria-label="Следующие города"
+          @click="scrollLandmarks(1)"
+        >
+          <span class="home-landmarks__control-arrow home-landmarks__control-arrow--next" aria-hidden="true"></span>
+        </button>
       </div>
     </section>
 
@@ -71,7 +90,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { cities } from '../data/cities'
 import heroMap from '../assets/hero-map.png'
 import iconMap from '../assets/icon-map.png'
@@ -79,9 +98,9 @@ import iconCity from '../assets/icon-city.png'
 import iconCompass from '../assets/icon-compass.png'
 import iconHelmet from '../assets/icon-helmet.png'
 
-const featuredCities = computed(() => {
-  return cities.filter((city) => city.isMajor).slice(0, 4)
-})
+const landmarksCarouselRef = ref(null)
+
+const landmarkCities = computed(() => cities)
 
 const features = [
   {
@@ -109,6 +128,25 @@ const features = [
     to: { name: 'expeditions' }
   }
 ]
+
+function scrollLandmarks(direction) {
+  if (!landmarksCarouselRef.value) return
+
+  const carousel = landmarksCarouselRef.value
+  const card = carousel.querySelector('.home-landmark')
+
+  if (!card) return
+
+  const cardWidth = card.getBoundingClientRect().width
+  const gap = 47
+  const visibleCards = 4
+  const scrollDistance = (cardWidth + gap) * visibleCards
+
+  carousel.scrollBy({
+    left: direction * scrollDistance,
+    behavior: 'smooth'
+  })
+}
 </script>
 
 <style scoped>
@@ -316,15 +354,37 @@ const features = [
   transform: translateX(3px);
 }
 
-.home-landmarks__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.home-landmarks__carousel-wrap {
+  position: relative;
+  width: min(1362px, calc(100% - 40px));
+  padding: 0 58px;
+}
+
+.home-landmarks__carousel {
+  display: flex;
+  width: 1213px;
+  max-width: 100%;
   gap: 47px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0;
+  scroll-padding-right: 0;
+  padding: 4px 0 18px;
+  scrollbar-width: none;
+}
+
+.home-landmarks__carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .home-landmark {
   display: block;
+  flex: 0 0 268px;
+  width: 268px;
   color: #000000;
+  scroll-snap-align: start;
 }
 
 .home-landmark__image {
@@ -348,6 +408,58 @@ const features = [
   font-weight: 700;
   line-height: 24px;
   color: #000000;
+}
+
+.home-landmarks__control {
+  position: absolute;
+  top: 61px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: rgba(250, 246, 237, .94);
+  border: 1px solid #e5c97a;
+  border-radius: 50%;
+  box-shadow: 0 8px 18px rgba(58, 46, 31, .13);
+  cursor: pointer;
+  transition: transform .2s ease, background-color .2s ease, color .2s ease;
+}
+
+.home-landmarks__control:hover {
+  transform: translateY(-2px);
+  background: #2a9d8e;
+}
+
+.home-landmarks__control-arrow {
+  display: block;
+  width: 11px;
+  height: 11px;
+  border-top: 2px solid #3a2e1f;
+  border-left: 2px solid #3a2e1f;
+  transition: border-color .2s ease;
+}
+
+.home-landmarks__control:hover .home-landmarks__control-arrow {
+  border-color: #ffffff;
+}
+
+.home-landmarks__control-arrow--prev {
+  transform: translateX(2px) rotate(-45deg);
+}
+
+.home-landmarks__control-arrow--next {
+  transform: translateX(-2px) rotate(135deg);
+}
+
+.home-landmarks__control--prev {
+  left: 0;
+}
+
+.home-landmarks__control--next {
+  right: 0;
 }
 
 .home-about {
@@ -389,9 +501,13 @@ const features = [
 }
 
 @media (max-width: 1120px) {
-  .home-features__grid,
-  .home-landmarks__grid {
+  .home-features__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-landmark {
+    flex-basis: 250px;
+    width: 250px;
   }
 }
 
@@ -432,11 +548,24 @@ const features = [
   .home-section-head a {
     margin-top: 0;
   }
+
+  .home-landmarks__control {
+    display: none;
+  }
+
+  .home-landmarks__carousel-wrap {
+    width: calc(100% - 32px);
+    padding: 0;
+  }
+
+  .home-landmark {
+    flex-basis: 240px;
+    width: 240px;
+  }
 }
 
 @media (max-width: 560px) {
-  .home-features__grid,
-  .home-landmarks__grid {
+  .home-features__grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
