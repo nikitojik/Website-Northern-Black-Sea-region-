@@ -21,20 +21,15 @@
             v-for="item in visibleExpeditions"
             :key="item.id"
             class="expeditions-page-redesign__card"
+            :class="{ 'expeditions-page-redesign__card--has-image': hasImage(item) }"
             v-reveal
           >
             <img
-              v-if="item.image"
+              v-if="hasImage(item)"
               :src="item.image"
               :alt="item.title"
               class="expeditions-page-redesign__card-image"
             >
-
-            <div
-              v-else
-              class="expeditions-page-redesign__card-image expeditions-page-redesign__card-image--empty"
-              aria-hidden="true"
-            ></div>
 
             <div class="expeditions-page-redesign__card-body">
               <p class="expeditions-page-redesign__card-period">
@@ -95,6 +90,21 @@ const visibleExpeditions = computed(() => {
 const hiddenCount = computed(() => {
   return Math.max(expeditionItems.length - initialCount, 0)
 })
+
+function hasImage(item) {
+  if (!item.image) {
+    return false
+  }
+
+  const imagePath = String(item.image).trim().toLowerCase()
+
+  return Boolean(
+    imagePath &&
+    !imagePath.includes('placeholder') &&
+    !imagePath.includes('undefined') &&
+    !imagePath.includes('null')
+  )
+}
 </script>
 
 <style scoped>
@@ -202,16 +212,16 @@ const hiddenCount = computed(() => {
   border-radius: 12px 12px 0 0;
 }
 
-.expeditions-page-redesign__card-image--empty {
-  background: #faf6ed;
-}
-
 .expeditions-page-redesign__card-body {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  padding: 20px 24px 22px;
+  padding: 190px 24px 22px;
+}
+
+.expeditions-page-redesign__card--has-image .expeditions-page-redesign__card-body {
+  padding-top: 20px;
 }
 
 .expeditions-page-redesign__card-period {

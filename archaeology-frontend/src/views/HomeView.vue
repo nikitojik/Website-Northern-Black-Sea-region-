@@ -206,7 +206,7 @@ function scrollLandmarks(direction) {
   display: block;
   width: 100%;
   height: 476px;
-  margin-top: 14px;
+  margin-top: 34px;
   object-fit: cover;
   object-position: center 0%;
   border-radius: 12px;
