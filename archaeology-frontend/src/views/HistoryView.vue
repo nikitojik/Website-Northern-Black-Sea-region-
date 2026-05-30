@@ -28,13 +28,14 @@
 
           <h2>{{ item.title }}</h2>
 
-          <div class="history-page-redesign__text">
-            <p
-              v-for="(paragraph, index) in getParagraphs(item)"
-              :key="index"
-            >
-              {{ paragraph }}
-            </p>
+          <RichText
+            v-if="item.content"
+            :blocks="item.content.blocks || []"
+            :notes="item.content.notes || {}"
+          />
+
+          <div v-else class="history-page-redesign__text">
+            <p>{{ item.short }}</p>
           </div>
         </article>
       </div>
@@ -43,20 +44,8 @@
 </template>
 
 <script setup>
+import RichText from '../components/RichText.vue'
 import { historyItems } from '../data/history'
-
-function getParagraphs(item) {
-  const text = item.full || item.short || ''
-
-  if (Array.isArray(text)) {
-    return text.filter(Boolean)
-  }
-
-  return String(text)
-    .split(/\n+/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
-}
 </script>
 
 <style scoped>
@@ -158,6 +147,24 @@ function getParagraphs(item) {
   color: #3a2e1f;
 }
 
+.history-page-redesign__article :deep(.rich-text) {
+  margin-top: 10px;
+  font-family: Lora, Georgia, serif;
+  color: #3a2e1f;
+}
+
+.history-page-redesign__article :deep(.rich-text p) {
+  margin: 0 0 18px;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 31px;
+  color: #3a2e1f;
+}
+
+.history-page-redesign__article :deep(.rich-text p:last-child) {
+  margin-bottom: 0;
+}
+
 .history-page-redesign__text {
   font-family: Lora, Georgia, serif;
   color: #3a2e1f;
@@ -171,15 +178,12 @@ function getParagraphs(item) {
   color: #3a2e1f;
 }
 
-.history-page-redesign__text p:last-child {
-  margin-bottom: 0;
-}
-
 @media (max-width: 1100px) {
   .history-page-redesign__container {
     width: calc(100% - 80px);
   }
 
+  .history-page-redesign__article :deep(.rich-text p),
   .history-page-redesign__text p {
     font-size: 21px;
     line-height: 30px;
@@ -231,6 +235,7 @@ function getParagraphs(item) {
     line-height: 38px;
   }
 
+  .history-page-redesign__article :deep(.rich-text p),
   .history-page-redesign__text p {
     font-size: 18px;
     line-height: 28px;

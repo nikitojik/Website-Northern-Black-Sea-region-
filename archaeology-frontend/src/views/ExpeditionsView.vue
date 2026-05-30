@@ -16,6 +16,10 @@
 
     <section class="expeditions-page-redesign__content">
       <div class="expeditions-page-redesign__container">
+        <p class="expeditions-page-redesign__count">
+          Показано {{ visibleExpeditions.length }} из {{ expeditionItems.length }} экспедиций
+        </p>
+
         <div class="expeditions-page-redesign__grid">
           <article
             v-for="item in visibleExpeditions"
@@ -172,8 +176,19 @@ function hasImage(item) {
 
 .expeditions-page-redesign__content {
   min-height: 1284px;
-  padding: 82px 0 54px;
+  padding: 40px 0 54px;
   background: #ffffff;
+}
+
+.expeditions-page-redesign__count {
+  margin: 0 0 76px;
+  padding: 0;
+  border: 0;
+  font-family: Lora, Georgia, serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15px;
+  color: #525252;
 }
 
 .expeditions-page-redesign__grid {
@@ -381,6 +396,10 @@ function hasImage(item) {
   .expeditions-page-redesign__content {
     min-height: auto;
     padding: 40px 0 48px;
+  }
+
+  .expeditions-page-redesign__count {
+    margin-bottom: 32px;
   }
 
   .expeditions-page-redesign__card {

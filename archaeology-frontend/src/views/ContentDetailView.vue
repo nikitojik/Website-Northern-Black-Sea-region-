@@ -9,7 +9,13 @@
 
           <h2>{{ item.title }}</h2>
 
-          <div class="content-detail-redesign__text">
+          <RichText
+            v-if="item.content"
+            :blocks="item.content.blocks || []"
+            :notes="item.content.notes || {}"
+          />
+
+          <div v-else class="content-detail-redesign__text">
             <p v-for="(paragraph, index) in paragraphs" :key="index">
               {{ paragraph }}
             </p>
@@ -30,6 +36,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import RichText from '../components/RichText.vue'
 import placeholder from '../assets/placeholder.png'
 import { expeditionItems } from '../data/expeditions'
 import { historyItems } from '../data/history'
@@ -116,18 +123,42 @@ const paragraphs = computed(() => {
   color: #3a2e1f;
 }
 
-.content-detail-redesign__text {
+.content-detail-redesign__text,
+.content-detail-redesign__article :deep(.rich-text) {
   margin-top: 10px;
   font-family: Lora, Georgia, serif;
   color: #3a2e1f;
 }
 
-.content-detail-redesign__text p {
+.content-detail-redesign__text p,
+.content-detail-redesign__article :deep(.rich-text p) {
   margin: 0 0 18px;
   font-size: 24px;
   font-weight: 400;
   line-height: 31px;
   color: #3a2e1f;
+}
+
+.content-detail-redesign__article :deep(.rich-text__heading) {
+  margin: 38px 0 14px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 38px;
+  color: #3a2e1f;
+}
+
+.content-detail-redesign__article :deep(.rich-text__list) {
+  margin: 0 0 22px;
+  padding-left: 26px;
+  font-family: Lora, Georgia, serif;
+  font-size: 24px;
+  line-height: 31px;
+  color: #3a2e1f;
+}
+
+.content-detail-redesign__article :deep(.rich-text__list li + li) {
+  margin-top: 8px;
 }
 
 .content-detail-redesign__actions {
@@ -167,7 +198,9 @@ const paragraphs = computed(() => {
     width: calc(100% - 80px);
   }
 
-  .content-detail-redesign__text p {
+  .content-detail-redesign__text p,
+  .content-detail-redesign__article :deep(.rich-text p),
+  .content-detail-redesign__article :deep(.rich-text__list) {
     font-size: 21px;
     line-height: 30px;
   }
@@ -194,7 +227,9 @@ const paragraphs = computed(() => {
     line-height: 27px;
   }
 
-  .content-detail-redesign__text p {
+  .content-detail-redesign__text p,
+  .content-detail-redesign__article :deep(.rich-text p),
+  .content-detail-redesign__article :deep(.rich-text__list) {
     font-size: 18px;
     line-height: 28px;
   }

@@ -21,6 +21,7 @@ import feodosiya from '../assets/feodosiya.jpg'
 import { pantikapeyContent } from '../content/cities/pantikapey'
 import { olbiaContent } from '../content/cities/olbia'
 import { phanagoriaContent } from '../content/cities/phanagoria'
+import { chersonesusContent } from '../content/cities/chersonesus'
 import { placeholderCityContent } from '../content/cities/placeholderCity'
 
 export const cities = [
@@ -61,7 +62,7 @@ export const cities = [
     lng: 33.4894,
     isMajor: true,
     isHermitage: false,
-    content: placeholderCityContent
+    content: chersonesusContent
   },
   {
     id: 4,
