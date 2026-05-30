@@ -281,9 +281,8 @@ function scrollLandmarks(direction) {
 }
 
 .home-feature__icon-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 40px;
   height: 40px;
   margin-bottom: 15px;
@@ -292,8 +291,9 @@ function scrollLandmarks(direction) {
 }
 
 .home-feature__icon {
-  width: 33px;
-  height: 33px;
+  display: block;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
 }
 
